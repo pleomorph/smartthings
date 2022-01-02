@@ -6,7 +6,10 @@
 
 preferences {
  section("External Access") {
-  input "webhook_url", "text", title: "Webhook URL", required: false
+//   input "webhook_url", "text", title: "Webhook URL", required: false
+  input "webhook_userkey", "text", title: "Pushover User Key", required: false
+  input "webhook_apptoken", "text", title: "Pushover Application Token", required: false
+  input "webhook_message", "text", title: "Custom Message", required: false
  }
 }
 
@@ -53,8 +56,8 @@ def off() {
 
 def runCmd(String power, String type) {
 	def params = [
-   		uri: "${webhook_url}",
-   		body: [type: type, value: power, device: device.name]
+   		uri: "https://api.pushover.net/1/messages.json",
+   		body: [message: webhook_message, device: device.name]
   	]
   	try {
    		httpPostJson(params) {
