@@ -1,6 +1,6 @@
 /*
  *
- * Webhook Switch Device Handler
+ * Pushover Switch Device Handler
  */
 
 
@@ -14,7 +14,7 @@ preferences {
 }
 
 metadata {
- definition(name: "Webhook Switch", namespace: "novagl", author: "NovaGL") {
+ definition(name: "Pushover Switch", namespace: "pleomorph", author: "Pleomorph") {
   capability "Actuator"
   capability "Switch"
   capability "Sensor"
@@ -47,17 +47,23 @@ def parse(String description) {
 def on() {	
     sendEvent(name: "triggerswitch", value: "triggeron", isStateChange: true)
 	runCmd("on", "switch")
+    off()
 }
 
 def off() {	
     sendEvent(name: "triggerswitch", value: "triggeroff", isStateChange: true)
-    runCmd("off", "switch")
+    //runCmd("off", "switch")
 }
 
 def runCmd(String power, String type) {
 	def params = [
    		uri: "https://api.pushover.net/1/messages.json",
-   		body: [message: webhook_message, device: device.name]
+   		body: [
+            token: webhook_apptoken,
+            user: webhook_userkey,
+            title: "SmartThings Alert",
+            message: webhook_message, 
+        ]
   	]
   	try {
    		httpPostJson(params) {
