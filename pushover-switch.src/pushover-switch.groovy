@@ -8,6 +8,7 @@ metadata {
         capability "Actuator"
         capability "Switch"
         capability "Sensor"
+        capability "Contact Sensor"
     }
 
     preferences {
@@ -22,22 +23,19 @@ metadata {
 
 
     // simulator metadata
-    simulator {}
+    simulator {
+        status "open": "contact:open"
+        status "closed": "contact:closed"
+    }
 
     // UI tile definitions
     tiles {
-        standardTile("button", "device.switch", width: 2, height: 2, canChangeIcon: true) {
-        state "off", label: 'Off', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState: "on"
-        state "on", label: 'On', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#79b821", nextState: "off"
+        standardTile("switch", "device.switch", width: 2, height: 2, canChangeIcon: true) {
+            state "off", label: '${currentValue}', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff"
+            state "on", label: '${currentValue}', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#00A0DC"
         }
-        standardTile("offButton", "device.button", width: 1, height: 1, canChangeIcon: true) {
-        state "default", label: 'Force Off', action: "switch.off", icon: "st.switches.switch.off", backgroundColor: "#ffffff"
-        }
-        standardTile("onButton", "device.switch", width: 1, height: 1, canChangeIcon: true) {
-        state "default", label: 'Force On', action: "switch.on", icon: "st.switches.switch.on", backgroundColor: "#79b821"
-        }
-        main "button"
-        details(["button", "onButton", "offButton"])
+        main "switch"
+        details(["switch"])
     }
     
 
@@ -55,7 +53,7 @@ def on() {
 
 def off() {	
     sendEvent(name: "triggerswitch", value: "triggeroff", isStateChange: true)
-    runCmd("off", "switch")
+    //runCmd("off", "switch")
 }
 
 def runCmd(String power, String type) {
