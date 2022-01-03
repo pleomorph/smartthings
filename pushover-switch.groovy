@@ -52,7 +52,7 @@ def on() {
 
 def off() {	
     sendEvent(name: "triggerswitch", value: "triggeroff", isStateChange: true)
-    //runCmd("off", "switch")
+    runCmd("off", "switch")
 }
 
 def runCmd(String power, String type) {
